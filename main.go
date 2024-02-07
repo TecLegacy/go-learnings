@@ -33,12 +33,17 @@ func main() {
 			},
 			AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 			AllowCredentials: false,
-			// AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
-			AllowedHeaders: []string{"*"},
+			AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+			// AllowedHeaders: []string{"*"},
 			ExposedHeaders: []string{"Link"},
 			MaxAge:         300,
 		},
 	))
+
+	v1Router := chi.NewRouter()
+	v1Router.HandleFunc("/healthz", handleHealth)
+
+	router.Mount("/v1", v1Router)
 
 	srv := &http.Server{
 		Addr:    ":" + portString,
