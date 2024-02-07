@@ -3,8 +3,11 @@ package main
 import (
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/cors"
 	"github.com/joho/godotenv"
 )
 
@@ -20,5 +23,33 @@ func main() {
 		log.Fatal("port not found")
 	}
 
-	fmt.Print("HelloWord")
+	router := chi.NewRouter()
+
+	router.Use(cors.Handler(
+		cors.Options{
+			AllowedOrigins: []string{
+				"https://*",
+				"http://*",
+			},
+			AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+			AllowCredentials: false,
+			// AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+			AllowedHeaders: []string{"*"},
+			ExposedHeaders: []string{"Link"},
+			MaxAge:         300,
+		},
+	))
+
+	srv := &http.Server{
+		Addr:    ":" + portString,
+		Handler: router,
+	}
+
+	fmt.Printf("Server Started and listening %v", portString)
+
+	// Server Start
+	if err := srv.ListenAndServe(); err != nil {
+		log.Fatalf("Server failed to start: %v", err)
+	}
+
 }
