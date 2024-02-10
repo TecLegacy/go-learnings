@@ -37,6 +37,7 @@ func main() {
 		log.Fatal("Postgres String not found")
 	}
 
+	// Connection to postgres server
 	conn, err := sql.Open("postgres", dbString)
 	if err != nil {
 		log.Fatal("Failed to connect to DB", err)
@@ -64,10 +65,13 @@ func main() {
 	))
 
 	v1Router := chi.NewRouter()
-	v1Router.HandleFunc("/healthz", handleHealth)
-	v1Router.Get("/ready", handleHealth)
-	v1Router.Get("/error", handleError)
-	v1Router.Post("/createuser", apiCfg.handleCreateUser)
+	v1Router.HandleFunc("/healthz", handlerHealth)
+	// v1Router.Get("/ready", handlerHealth)
+
+	v1Router.Get("/error", handlerError)
+
+	v1Router.Post("/user", apiCfg.handlerCreateUser)
+	v1Router.Get("/user", apiCfg.handlerGetUser)
 
 	router.Mount("/v1", v1Router)
 

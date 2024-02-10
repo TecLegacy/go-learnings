@@ -7,10 +7,11 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/teclegacy/rss-aggregator/internal/auth"
 	"github.com/teclegacy/rss-aggregator/internal/database"
 )
 
-func (apicfg *apiConfig) handleCreateUser(w http.ResponseWriter, r *http.Request) {
+func (apicfg *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Request) {
 	type parameters struct {
 		Name string `json:"name"`
 	}
@@ -35,5 +36,22 @@ func (apicfg *apiConfig) handleCreateUser(w http.ResponseWriter, r *http.Request
 	}
 
 	responseWithJson(w, 201, dbUserToUser(usr))
+
+}
+func (apicfg *apiConfig) handlerGetUser(w http.ResponseWriter, r *http.Request) {
+
+	apiKey, err := auth.GetApiKey(r.Header)
+	if err != nil {
+		respondWithError(w, 400, fmt.Sprintf("Error Parsing Header %v", err))
+		return
+	}
+
+	usr, err := apicfg.DB.GetUserByAPIKey(r.Context(), apiKey)
+	if err != nil {
+		respondWithError(w, 400, fmt.Sprintf("Error No User Found %v", err))
+		return
+	}
+
+	responseWithJson(w, 200, dbUserToUser(usr))
 
 }
