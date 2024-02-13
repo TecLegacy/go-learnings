@@ -15,12 +15,12 @@ type User struct {
 	ApiKey    string    `json:"api_key"`
 }
 
-func dbUserToUser(usr database.User) User {
+func dbUserToUser(user database.User) User {
 	return User{
-		ID:        usr.ID,
-		CreatedAt: usr.CreatedAt,
-		UpdatedAt: usr.UpdatedAt,
-		Name:      usr.Name,
-		ApiKey:    usr.ApiKey,
+		ID:        user.ID,
+		CreatedAt: user.CreatedAt,
+		UpdatedAt: user.UpdatedAt,
+		Name:      user.Name,
+		ApiKey:    user.ApiKey,
 	}
 }

@@ -7,11 +7,10 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/teclegacy/rss-aggregator/internal/auth"
 	"github.com/teclegacy/rss-aggregator/internal/database"
 )
 
-func (apicfg *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Request) {
+func (apiCfg *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Request) {
 	type parameters struct {
 		Name string `json:"name"`
 	}
@@ -24,7 +23,7 @@ func (apicfg *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	usr, err := apicfg.DB.CreateUser(r.Context(), database.CreateUserParams{
+	user, err := apiCfg.DB.CreateUser(r.Context(), database.CreateUserParams{
 		ID:        uuid.New(),
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
@@ -35,23 +34,11 @@ func (apicfg *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	responseWithJson(w, 201, dbUserToUser(usr))
+	responseWithJson(w, 201, dbUserToUser(user))
 
 }
-func (apicfg *apiConfig) handlerGetUser(w http.ResponseWriter, r *http.Request) {
+func (apiCfg *apiConfig) handlerGetUser(w http.ResponseWriter, r *http.Request, user database.User) {
 
-	apiKey, err := auth.GetApiKey(r.Header)
-	if err != nil {
-		respondWithError(w, 400, fmt.Sprintf("Error Parsing Header %v", err))
-		return
-	}
-
-	usr, err := apicfg.DB.GetUserByAPIKey(r.Context(), apiKey)
-	if err != nil {
-		respondWithError(w, 400, fmt.Sprintf("Error No User Found %v", err))
-		return
-	}
-
-	responseWithJson(w, 200, dbUserToUser(usr))
+	responseWithJson(w, 200, dbUserToUser(user))
 
 }
