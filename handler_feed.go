@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -42,4 +43,18 @@ func (apiCfg apiConfig) handlerCreateFeed(w http.ResponseWriter, r *http.Request
 	}
 
 	responseWithJson(w, 201, databaseFeedToFeed(feed))
+}
+
+func (apiCfg apiConfig) handlerGetAllFeeds(w http.ResponseWriter, r *http.Request) {
+	allFeeds, err := apiCfg.DB.GetFeed(r.Context())
+	if err != nil {
+		respondWithError(w, 400, fmt.Sprintf("No feeds found %v", err))
+		return
+	}
+
+	// responseWithJson(w, 200, databaseFeedToFeed(allFeeds))
+	log.Printf("Ss %v", allFeeds)
+	// responseWithJson(w, 200, struct{}{})
+	responseWithJson(w, 200, databaseALLFeedsToFeed(allFeeds))
+
 }
