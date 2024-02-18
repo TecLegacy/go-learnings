@@ -2,20 +2,20 @@
 
 goose postgres postgres://username:password@localhost:5432/testgo up
 
-# Rich Site Summary (RSS) Aggregator API Documentation 📝
+# Rich Site Summary (RSS) Aggregator API Docs 📝
 
 ## Index 📚
 
 1. [Introduction](#introduction)
-2. [Rss site links](#rss-url)
+2. [Rss Url Links](#rss-url-links)
 3. [Base URL](#base-url)
 4. [Authentication](#authentication)
 5. [Error Handling](#error-handling)
    - [Common HTTP Status Codes](#common-http-status-codes)
 6. [Endpoints](#endpoints)
    - [Users](#users)
-     - [GET /users](#get-users)
-     - [POST /users](#post-users)
+     - [GET /users](#get-baseurluser)
+     - [POST /users](#post-baseurluser)
      - TODO - [GET /users/{id}](#get-usersid)
      - TODO - [PUT /users/{id}](#put-usersid)
      - TODO - [DELETE /users/{id}](#delete-usersid)
@@ -26,7 +26,7 @@ goose postgres postgres://username:password@localhost:5432/testgo up
 
 This document provides comprehensive documentation for the RESTful CRUD API of the RSS Aggregator application written in Go. It outlines endpoints, authentication, error handling, and usage examples.
 
-## RSS URL 🌐
+## Rss Url Links🌐
 
 RSS site links:
 
