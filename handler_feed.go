@@ -42,7 +42,7 @@ func (apiCfg apiConfig) handlerCreateFeed(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	responseWithJson(w, 201, databaseFeedToFeed(feed))
+	respondWithJson(w, 201, dbFeedToFeed(feed))
 }
 
 func (apiCfg apiConfig) handlerGetAllFeeds(w http.ResponseWriter, r *http.Request) {
@@ -52,9 +52,9 @@ func (apiCfg apiConfig) handlerGetAllFeeds(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	// responseWithJson(w, 200, databaseFeedToFeed(allFeeds))
+	// respondWithJson(w, 200, dbFeedToFeed(allFeeds))
 	log.Printf("Ss %v", allFeeds)
-	// responseWithJson(w, 200, struct{}{})
-	responseWithJson(w, 200, databaseALLFeedsToFeed(allFeeds))
+	// respondWithJson(w, 200, struct{}{})
+	respondWithJson(w, 200, dbAllFeedsToAllFeeds(allFeeds))
 
 }

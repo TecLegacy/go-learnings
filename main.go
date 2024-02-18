@@ -65,16 +65,23 @@ func main() {
 	))
 
 	v1Router := chi.NewRouter()
+
 	v1Router.HandleFunc("/healthz", handlerHealth)
-	// v1Router.Get("/ready", handlerHealth)
 
 	v1Router.Get("/error", handlerError)
 
-	v1Router.Post("/user", apiCfg.handlerCreateUser)
-	v1Router.Get("/user", apiCfg.authMiddleware(apiCfg.handlerGetUser))
+	// Create user -> response with authenticated API_KEY
+	v1Router.Post("/user", apiCfg.createUserHandler)
+	// Response with current user if authenticated with API else Not authorized
+	v1Router.Get("/user", apiCfg.authMiddleware(apiCfg.getUserHandler))
 
+	// Authenticated user creating a feed
 	v1Router.Post("/feed", apiCfg.authMiddleware(apiCfg.handlerCreateFeed))
+	// To Get all feeds in our db
 	v1Router.Get("/feed", apiCfg.handlerGetAllFeeds)
+
+	// User likes a particular feed
+	v1Router.Post("/feed_follows", apiCfg.authMiddleware(apiCfg.handleFeedFollowsRequest))
 
 	router.Mount("/v1", v1Router)
 

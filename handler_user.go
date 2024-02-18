@@ -10,35 +10,39 @@ import (
 	"github.com/teclegacy/rss-aggregator/internal/database"
 )
 
-func (apiCfg *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Request) {
-	type parameters struct {
+func (apiCfg *apiConfig) createUserHandler(w http.ResponseWriter, r *http.Request) {
+
+	type RequestParameters struct {
 		Name string `json:"name"`
 	}
-	params := parameters{}
-	decode := json.NewDecoder(r.Body)
+	var requestParams RequestParameters
 
-	err := decode.Decode(&params)
+	jsonDecoder := json.NewDecoder(r.Body)
+
+	err := jsonDecoder.Decode(&requestParams)
 	if err != nil {
-		respondWithError(w, 400, fmt.Sprintf("Failed to parse data %v", err))
+
+		respondWithError(w, 400, fmt.Sprintf("Failed to parse request data: %v", err))
 		return
 	}
 
-	user, err := apiCfg.DB.CreateUser(r.Context(), database.CreateUserParams{
+	// Create a new user in the database.
+	newUser, err := apiCfg.DB.CreateUser(r.Context(), database.CreateUserParams{
 		ID:        uuid.New(),
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
-		Name:      params.Name,
+		Name:      requestParams.Name,
 	})
 	if err != nil {
-		respondWithError(w, 400, fmt.Sprintf("Error Creating User %v", err))
+
+		respondWithError(w, 400, fmt.Sprintf("Failed to create user: %v", err))
 		return
 	}
 
-	responseWithJson(w, 201, dbUserToUser(user))
-
+	respondWithJson(w, 201, dbUserToUser(newUser))
 }
-func (apiCfg *apiConfig) handlerGetUser(w http.ResponseWriter, r *http.Request, user database.User) {
 
-	responseWithJson(w, 200, dbUserToUser(user))
+func (apiCfg *apiConfig) getUserHandler(w http.ResponseWriter, r *http.Request, user database.User) {
 
+	respondWithJson(w, 200, dbUserToUser(user))
 }
